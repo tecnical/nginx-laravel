@@ -1,0 +1,4 @@
+#!/bin/sh
+
+docker build -t publiocavalcante/nginx-laravel .
+docker push publiocavalcante/nginx-laravel
