@@ -1,12 +1,14 @@
 FROM nginx:alpine
 
-COPY nginx.conf /etc/nginx/
-COPY nginx-laravel.conf /etc/nginx/modules/
+# nginx.conf global (worker, gzip, log format, include http.d)
+COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN mkdir -p /run/nginx/
-RUN touch /run/nginx/nginx.pid
+# Virtual host do Laravel — deve ir para http.d, não para modules/
+# O nginx.conf inclui /etc/nginx/http.d/*.conf
+COPY nginx-laravel.conf /etc/nginx/http.d/default.conf
 
-RUN ln -sf /dev/stdout /var/log/nginx/access.log
-RUN ln -sf /dev/stderr /var/log/nginx/error.log
-
-#ADD php/nginx/nginx-laravel.conf /etc/nginx/conf.d/default.conf
+RUN mkdir -p /run/nginx/ && \
+    touch /run/nginx/nginx.pid && \
+    # Redireciona logs para stdout/stderr do Docker
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log
