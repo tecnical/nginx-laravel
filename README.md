@@ -12,6 +12,7 @@ A configuração do Nginx inclui otimizações para aplicações Laravel, como r
 - **Configuração Laravel**: Otimizada para aplicações Laravel com roteamento SPA
 - **PHP-FPM**: Integração com serviço PHP-FPM na porta 9000
 - **Cache de Assets**: Cache longo para arquivos estáticos (JS, CSS, imagens)
+- **Compressão Brotli**: Compressão Brotli para assets estáticos JS, CSS e SVG; gzip continua disponível como fallback e para as demais respostas
 - **Segurança**: Headers de segurança (X-Frame-Options, X-Content-Type-Options, etc.)
 - **Logs**: Redirecionamento de logs para stdout/stderr do Docker
 
@@ -92,6 +93,12 @@ A aplicação estará disponível em `http://localhost`.
 
 - `nginx.conf`: Configuração global do Nginx
 - `nginx-laravel.conf`: Configuração específica para Laravel
+
+### Compressão Brotli
+
+O módulo Brotli é compilado durante a construção da imagem contra a mesma versão do Nginx utilizada nela. A compressão é habilitada apenas na localização dos assets estáticos, para JS, CSS e SVG, sem comprimir respostas PHP/FastCGI. Clientes que não aceitam Brotli continuam recebendo gzip quando aplicável.
+
+O Brotli é aplicado dinamicamente aos arquivos estáticos compatíveis. O nível 4 limita o custo de CPU durante a compressão; respostas menores que 256 bytes não são comprimidas.
 
 ### Personalização
 
